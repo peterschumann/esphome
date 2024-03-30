@@ -155,9 +155,9 @@ void Emon::loop() {
     this->i_offset_ += (this->i_data_[j] - this->i_offset_) / 1024;
   }
 
-  int32_t v_rms = 0;
-  int32_t i_rms = 0;
-  int32_t p = 0;
+  uint64_t v_rms = 0;
+  uint64_t i_rms = 0;
+  int64_t p = 0;
 
   for (int j = first; j < BUF_LEN; j++) {
     this->v_data_[j] -= this->v_offset_;
@@ -170,8 +170,8 @@ void Emon::loop() {
     p += this->v_data_[j] * this->i_data_[j];
   }
 
-  float v_out = sqrt(this->v_cal_ * v_rms / (last - first + 1));
-  float i_out = sqrt(this->i_cal_ * i_rms / (last - first + 1));
+  float v_out = this->v_cal_ * sqrt(v_rms / (last - first + 1));
+  float i_out = this->i_cal_ * sqrt(i_rms / (last - first + 1));
   float p_out = this->v_cal_ * this->i_cal_ * p / (last - first + 1);
   float s_out = v_out * i_out;
   float pf;
