@@ -27,7 +27,6 @@ from esphome.const import (
     UNIT_VOLT_AMPS,
 )
 from esphome.components.adc import (
-    ATTENUATION_MODES,
     validate_adc_pin,
 )
 from esphome.components.esp32.const import (
@@ -156,6 +155,15 @@ ESP32_VARIANT_ADC2_PIN_TO_CHANNEL = {
     },
 }
 
+ATTENUATION_MODES = {
+    "0db": cg.global_ns.ADC_ATTEN_DB_0,
+    "2.5db": cg.global_ns.ADC_ATTEN_DB_2_5,
+    "6db": cg.global_ns.ADC_ATTEN_DB_6,
+    "11db": cg.global_ns.ADC_ATTEN_DB_12,
+    "12db": cg.global_ns.ADC_ATTEN_DB_12,
+    "auto": "auto",
+}
+
 
 def final_validate_config(config):
     if not CORE.is_esp32:
@@ -163,11 +171,9 @@ def final_validate_config(config):
 
     variant = get_esp32_variant()
     if CONF_WIFI in fv.full_config.get() and any(
-        [
-            (pin := config[k][CONF_PIN][CONF_NUMBER])
-            in ESP32_VARIANT_ADC2_PIN_TO_CHANNEL[variant]
-            for k in [CONF_V_INPUT, CONF_I_INPUT]
-        ]
+        (pin := config[k][CONF_PIN][CONF_NUMBER])
+        in ESP32_VARIANT_ADC2_PIN_TO_CHANNEL[variant]
+        for k in [CONF_V_INPUT, CONF_I_INPUT]
     ):
         raise cv.Invalid(
             f"{variant} doesn't support ADC on pin {pin} when Wi-Fi is configured"
