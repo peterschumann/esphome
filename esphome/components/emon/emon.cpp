@@ -183,7 +183,7 @@ void Emon::loop() {
   }
 
   // ESP_LOGI(TAG, "Vrms=%.2f, Irms=%.2f, P=%.2f, S=%.2f, PF=%.2f", v_out, i_out, p_out, s_out, pf);
-  // ESP_LOGD(TAG, "v_offset_=%d, i_offset_=%d, first=%d, last=%d", this->v_offset_, this->i_offset_, first, last);
+   ESP_LOGD(TAG, "v_offset_=%d, i_offset_=%d, first=%d, last=%d", this->v_offset_, this->i_offset_, first, last);
   if (this->voltage_sensor_ != nullptr) {
     this->voltage_sensor_->publish_state(v_out);
   }
