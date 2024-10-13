@@ -153,9 +153,9 @@ void Emon::loop() {
 
   for (int j = first; j < BUF_LEN; j++) {
     this->v_offset_ += (this->v_data_[j] - this->v_offset_) / 1024;
-    this->i_offset_ += (this->i_data_[j] - this->i_offset_) / 1024;
+    this->i_offset_f += (this->i_data_[j] - this->i_offset_f) / 1024.0f;
   }
-
+  this->i_offset_ = this->i_offset_f;
   uint64_t v_rms = 0;
   uint64_t i_rms = 0;
   int64_t p = 0;
@@ -163,7 +163,6 @@ void Emon::loop() {
   for (int j = first; j < BUF_LEN; j++) {
     this->v_data_[j] -= this->v_offset_;
     this->i_data_[j] -= this->i_offset_;
-    ESP_LOGD(TAG,"i_data[%04d]=%hn",j,this->i_data_);
   }
 
   for (int j = first; j <= last; j++) {
@@ -183,8 +182,9 @@ void Emon::loop() {
     pf = p_out / s_out;
   }
 
-   ESP_LOGI(TAG, "Vrms=%.2f, Irms=%.2f, P=%.2f, S=%.2f, PF=%.2f", v_out, i_out, p_out, s_out, pf);
-   ESP_LOGD(TAG, "v_offset_=%d, i_offset_=%d, first=%d, last=%d", this->v_offset_, this->i_offset_, first, last);
+  ESP_LOGI(TAG, "Vrms=%.2f, Irms=%.2f, P=%.2f, S=%.2f, PF=%.2f", v_out, i_out, p_out, s_out, pf);
+  ESP_LOGD(TAG, "v_offset_=%d, i_offset_=%d, i_offset_f=%.3f first=%d, last=%d", this->v_offset_, this->i_offset_,
+           this->i_offset_f, first, last);
   if (this->voltage_sensor_ != nullptr) {
     this->voltage_sensor_->publish_state(v_out);
   }
