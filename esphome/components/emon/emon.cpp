@@ -163,7 +163,7 @@ void Emon::loop() {
   for (int j = first; j < BUF_LEN; j++) {
     this->v_data_[j] -= this->v_offset_;
     this->i_data_[j] -= this->i_offset_;
-    ESP_LOGD(TAG,"i_data[%04d]=%d",j,this->i_data);
+    ESP_LOGD(TAG,"i_data[%04d]=%d",j,this->i_data_);
   }
 
   for (int j = first; j <= last; j++) {
